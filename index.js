@@ -1,7 +1,11 @@
+// Dependency imports
 const { ApolloServer } = require('apollo-server');
 const gql = require('graphql-tag');
 const mongoose = require('mongoose');
 require('dotenv').config();
+
+// Relative imports
+const Post = require('./models/Post');
 
 const mongodbUri = ('mongodb+srv://' 
   + process.env.SERVER_USER+':'
@@ -26,15 +30,30 @@ mongoose.connection.on('error', (err) => {
 });
 
 const typeDefs = gql`
+  type Post {
+    id: ID!,
+    body: String!,
+    username: String!,
+    createdAt: String!
+  }
   type Query {
-    sayHi: String!
+    getPosts: [Post] #graphQl type post
   }
 `; 
 // For each query, mutation or subscription has a 
 // corresponding resolver
 const resolvers = {
   Query: {
-    sayHi: () => 'Hello, World!'
+    async getPosts() {
+      // put in try, if query fails
+      try {
+        const posts = await Post.find() // await because async
+        return posts;
+      }
+      catch(err) {
+        throw new Error(err)
+      }
+    }
   }
 };
 
