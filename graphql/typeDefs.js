@@ -19,12 +19,18 @@ const typeDefs = gql`
     confirmPassword: String!
     email: String!
   }
+  input LoginInput {
+    username: String!
+    password: String!
+  }
   type Query {
     getPosts: [Post] #graphQl type post
   }
   # Mutations make changes in db
   type Mutation { 
-    register(registerInput: RegisterInput): User # references Input
+    register(registerInput: RegisterInput): User # references Input, returns  User
+    # login(loginInput: LoginInput): User
+    login(username: String!, password: String!): User
   }
 `; 
 module.exports = typeDefs;
