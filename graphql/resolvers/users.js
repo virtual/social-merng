@@ -1,16 +1,45 @@
 const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { UserInputError } = require('apollo-server');
+const { validateRegisterInput } = require('../../util/validator');
+
 require('dotenv').config();
 
 module.exports = {
   Mutation: {
     // register(parent, args, context, info), parent doesn't exist
     // register(_, args, context, info){ // Need to further destructure args
-    async register(_, { registerInput: { username, password, confirmPassword, email } }, 
-      context, info) {
+    async register(_, { 
+      registerInput: 
+      { username, email, password, confirmPassword } 
+    }, 
+      // context, // Not used
+      // info
+      ) {
       // TODO: validate user data
+      const { valid, errors } = validateRegisterInput(
+        username,
+        email,
+        password,
+        confirmPassword
+      );
+      if (!valid) {
+        throw new UserInputError('Errors', { errors })
+      }
       // TODO: Check user doesn't exist
+      const user = await User.findOne({
+        username: username
+      })
+      if (user) {
+        throw new UserInputError("Username is not available.", 
+        {
+          // payload
+          errors: {
+            username: "taken"
+          }
+        })
+      }
       // TODO: Hash password
       // TODO: Create auth token
       password = await bcrypt.hash(password, 12); // bcrypt is async
