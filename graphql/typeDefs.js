@@ -25,12 +25,15 @@ const typeDefs = gql`
   }
   type Query {
     getPosts: [Post] #graphQl type post
+    getPost(postId: ID!): Post
   }
   # Mutations make changes in db
   type Mutation { 
-    register(registerInput: RegisterInput): User # references Input, returns  User
+    register(registerInput: RegisterInput): User! # references Input, returns  User
     # login(loginInput: LoginInput): User
-    login(username: String!, password: String!): User
+    login(username: String!, password: String!): User!
+    createPost(body: String!): Post!
+    deletePost(id: ID!): String!
   }
 `; 
 module.exports = typeDefs;

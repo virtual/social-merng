@@ -11,7 +11,7 @@ function generateToken(user) {
     id: user.id,
     email: user.email,
     username: user.username
-  }, process.env.SALT, { expiresIn: '1h' });
+  }, process.env.SECRET_KEY, { expiresIn: '1h' });
 }
 
 module.exports = {

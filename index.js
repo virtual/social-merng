@@ -31,5 +31,9 @@ mongoose.connection.on('error', (err) => {
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: (
+    // We get the req / res from Express
+    { req }
+   ) => ({req})
 });
