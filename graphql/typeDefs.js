@@ -33,7 +33,7 @@ const typeDefs = gql`
     # login(loginInput: LoginInput): User
     login(username: String!, password: String!): User!
     createPost(body: String!): Post!
-    deletePost(id: ID!): String!
+    deletePost(postId: ID!): String!
   }
 `; 
 module.exports = typeDefs;
